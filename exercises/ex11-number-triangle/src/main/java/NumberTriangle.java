@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 
 /**
  * Exercise (Chapter: APIs, JSON, and Files) — reading data from a file into objects.
@@ -109,7 +110,18 @@ public class NumberTriangle {
     //       value of wherever you ended up. An empty path means "stay here".
     //       Hint: String#charAt(int) and String#length() are all you need for the
     //       iterative version; a recursive version can use String#substring(1).
-    return 0;
+
+    NumberTriangle result = this;
+
+    int n = path.length();
+    for (int i = 0; i < n; i++){
+      if (path.charAt(i) == 'l'){
+        result = result.left;}
+      else{
+        result = result.right;
+      }
+    }
+    return result.getRoot();
   }
 
   /**
@@ -166,7 +178,10 @@ public class NumberTriangle {
     // to work with when reading a file line by line. See the file-reading section
     // of the "APIs, JSON, and Files" chapter.
     BufferedReader br = Files.newBufferedReader(Path.of(fname));
-
+    ArrayList<NumberTriangle> previous_row = null;
+    ArrayList<NumberTriangle> current_row = null;
+    ArrayList<ArrayList<NumberTriangle>> previous_objects = new ArrayList<>();
+    ArrayList<ArrayList<NumberTriangle>> current_objects = new ArrayList<>();
     // TODO: define any variables that you want to use to keep track of things
     //       between iterations of the loop below (for example, the row of
     //       NumberTriangle objects that you built on the previous iteration).
@@ -176,10 +191,38 @@ public class NumberTriangle {
 
     String line = br.readLine();
     while (line != null) {
+      if (current_row != null) {
+        previous_row = current_row;
+      }
+      current_row = new ArrayList<>();
+      String[] token = line.split(" ");
+      int n = token.length;
+      for (int i = 0; i < n; i++){
+          assert current_row != null;
+          current_row.add(new NumberTriangle(Integer.parseInt(token[i])));
+      }
 
-      // Remove this line when you are done; it is here so that the starter code
-      // prints the contents of the file when you run it.
-      System.out.println(line);
+      current_objects.add(current_row);
+
+      if (top == null){
+        top = current_row.get(0);
+      }
+
+      int m;
+      if (previous_row == null){
+        m = 0;
+      }
+      else{
+        m = previous_row.size();
+      }
+
+      if (previous_row != null){
+          for (int i = 0; i < m; i++){
+            NumberTriangle current = previous_row.get(i);
+            current.setLeft(current_row.get(i));
+            current.setRight(current_row.get(i + 1));
+          }
+      }
 
       // TODO: process the line. Splitting it on spaces gives you the numbers in
       //       this row; make a NumberTriangle for each one, then wire this row up
