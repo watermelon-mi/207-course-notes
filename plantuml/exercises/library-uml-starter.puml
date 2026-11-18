@@ -41,5 +41,55 @@ abstract class Item {
 '       to know about it.
 
 ' TODO: add the arrows between all of your types.
+interface Borrowable {
+  + getLoanPeriodDays() : int
+  + isOnLoan() : boolean
+}
+
+class Book {
+  + getLoanPeriodDays() : int
+  + isOnLoan() : boolean
+}
+
+class DVD {
+  + getLoanPeriodDays() : int
+  + isOnLoan() : boolean
+}
+
+class ReferenceItem
+
+class Member {
+  - memberNumber : String
+  - lateFee : BigDecimal
+  + logIn(memberNumber : String) : boolean
+  + placeHold(item : Borrowable) : Hold
+}
+
+class Librarian {
+  + addItem(catalogue : Catalogue, item : Item) : void
+  + waiveLateFee(member : Member) : void
+}
+
+class Catalogue {
+  + addItem(item : Item) : void
+}
+
+class Hold
+
+Item <|-- Book
+Item <|-- DVD
+Item <|-- ReferenceItem
+Borrowable <|.. Book
+Borrowable <|.. DVD
+
+Catalogue "1" -- "0..*" Item : lists
+Member "1" -- "0..*" Hold : places
+Borrowable "1" -- "0..*" Hold : requested item
+Librarian ..> Catalogue : adds items
+Librarian ..> Member : waives late fees
+
+note right of Book : Loan period is 21 days
+note right of DVD : Loan period is 7 days
+note right of Hold : Created only when the item is on loan
 
 @enduml

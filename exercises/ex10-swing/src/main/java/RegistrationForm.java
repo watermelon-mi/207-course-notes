@@ -1,10 +1,5 @@
-import java.awt.FlowLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
+import java.awt.*;
+import javax.swing.*;
 
 /**
  * Exercise (Chapter 4: GUIs with Swing) — matching a layout.
@@ -25,32 +20,39 @@ import javax.swing.SwingUtilities;
  */
 public class RegistrationForm {
 
-  /**
-   * Builds the form panel. Change the layout here — the components you need are
-   * all present, but they are arranged in a single row rather than stacked.
-   *
-   * @return the form's root panel
-   */
-  public static JPanel buildForm() {
-    JPanel panel = new JPanel(new FlowLayout());
-    panel.add(new JLabel("First name:"));
-    panel.add(new JTextField(12));
-    panel.add(new JLabel("Last name:"));
-    panel.add(new JTextField(12));
-    panel.add(new JButton("Submit"));
-    panel.add(new JButton("Cancel"));
-    return panel;
-  }
+    /**
+     * Builds the form panel. Change the layout here — the components you need are
+     * all present, but they are arranged in a single row rather than stacked.
+     *
+     * @return the form's root panel
+     */
+    public static JPanel buildForm() {
+        JPanel fields = new JPanel(new GridLayout(2, 2, 8, 6));
+        fields.add(new JLabel("First name:", SwingUtilities.RIGHT));
+        fields.add(new JTextField(12));
+        fields.add(new JLabel("Last name:", SwingUtilities.RIGHT));
+        fields.add(new JTextField(12));
 
-  /** Shows the form in a window so you can compare it with the target picture. */
-  public static void main(String[] args) {
-    SwingUtilities.invokeLater(
-        () -> {
-          JFrame frame = new JFrame("Registration");
-          frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-          frame.setContentPane(buildForm());
-          frame.pack();
-          frame.setVisible(true);
-        });
-  }
+        JPanel buttons = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        buttons.add(new JButton("Submit"));
+        buttons.add(new JButton("Cancel"));
+
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBorder(BorderFactory.createEmptyBorder(12, 12, 8, 12));
+        panel.add(fields, BorderLayout.CENTER);
+        panel.add(buttons, BorderLayout.SOUTH);
+        return panel;
+    }
+
+    /** Shows the form in a window so you can compare it with the target picture. */
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(
+                () -> {
+                    JFrame frame = new JFrame("Registration");
+                    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    frame.setContentPane(buildForm());
+                    frame.pack();
+                    frame.setVisible(true);
+                });
+    }
 }
